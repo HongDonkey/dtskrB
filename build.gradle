@@ -24,7 +24,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.flywaydb:flyway-mysql'
-	developmentOnly 'p6spy:p6spy:3.9.1'
+	runtimeOnly 'p6spy:p6spy:3.9.1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
@@ -36,5 +36,9 @@ tasks.named('test') {
 }
 
 tasks.named('bootRun') {
-	classpath += files('src/dev/resources')
+	// A local Gradle bootRun should show executable SQL with bound values.
+	// Explicit SPRING_PROFILES_ACTIVE / -Dspring.profiles.active still wins.
+	if (!System.getenv('SPRING_PROFILES_ACTIVE') && !System.getProperty('spring.profiles.active')) {
+		systemProperty 'spring.profiles.active', 'dev'
+	}
 }
