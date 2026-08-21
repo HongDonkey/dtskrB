@@ -4,7 +4,9 @@ public enum CatalogLanguage {
     KO("digimon_kr", "digimon_stage", "evolution_kr", "item_kr",
             "digimon_special_skill_kr", "digimon_attachment_skill_kr", "전체"),
     EN("digimon_en", "digimon_stage_en", "evolution_en", "item_en",
-            "digimon_special_skill_en", "digimon_attachment_skill_en", "All");
+            "digimon_special_skill_en", "digimon_attachment_skill_en", "All"),
+    JP("digimon_jp", "digimon_stage_jp", "evolution_jp", "item_jp",
+            "digimon_special_skill_jp", "digimon_attachment_skill_jp", "すべて");
 
     private final String digimonTable;
     private final String stageTable;
@@ -27,7 +29,11 @@ public enum CatalogLanguage {
     }
 
     public static CatalogLanguage fromHeader(String value) {
-        return value != null && value.toLowerCase().startsWith("en") ? EN : KO;
+        if (value == null) return KO;
+        String normalized = value.toLowerCase();
+        if (normalized.startsWith("en")) return EN;
+        if (normalized.startsWith("jp")) return JP;
+        return KO;
     }
 
     public String digimonTable() { return digimonTable; }
