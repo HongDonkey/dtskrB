@@ -77,7 +77,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(csrfRepository)
-                        .ignoringRequestMatchers("/api/requests/**"))
+                        .ignoringRequestMatchers("/api/requests/**", "/api/visits"))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/api/admin/auth/login",
