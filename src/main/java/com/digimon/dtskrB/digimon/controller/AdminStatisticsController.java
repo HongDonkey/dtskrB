@@ -20,8 +20,11 @@ public class AdminStatisticsController {
 
     @GetMapping("/today")
     public TodayStatistics getTodayStatistics() {
-        return new TodayStatistics(LocalDate.now(), visitorStatisticsService.getTodayVisitorCount());
+        return new TodayStatistics(
+                LocalDate.now(),
+                visitorStatisticsService.getTodayVisitorCount(),
+                visitorStatisticsService.getTotalVisitorCount());
     }
 
-    public record TodayStatistics(LocalDate date, long uniqueVisitors) { }
+    public record TodayStatistics(LocalDate date, long uniqueVisitors, long totalVisitors) { }
 }

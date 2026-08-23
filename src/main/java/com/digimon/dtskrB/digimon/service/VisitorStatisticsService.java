@@ -11,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class VisitorStatisticsService {
@@ -27,20 +28,32 @@ public class VisitorStatisticsService {
         this.hashSecret = hashSecret.getBytes(StandardCharsets.UTF_8);
     }
 
+    @Transactional
     public void recordVisit(String remoteAddress) {
         LocalDate today = LocalDate.now();
         String visitorHash = createDailyHash(today, normalizeAddress(remoteAddress));
-        jdbcTemplate.update("""
-                INSERT INTO daily_visitor (visit_date, visitor_hash)
-                VALUES (?, ?)
-                ON DUPLICATE KEY UPDATE last_visited_at = CURRENT_TIMESTAMP
-                """, today, visitorHash);
+        int inserted = jdbcTemplate.update(
+                "INSERT IGNORE INTO daily_visitor (visit_date, visitor_hash) VALUES (?, ?)",
+                today, visitorHash);
+        if (inserted == 1) {
+            jdbcTemplate.update("""
+                    UPDATE visitor_statistics
+                    SET total_visitors = total_visitors + 1
+                    WHERE id = 1
+                    """);
+        }
         jdbcTemplate.update("DELETE FROM daily_visitor WHERE visit_date < ?", today.minusDays(2));
     }
 
     public long getTodayVisitorCount() {
         Long count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM daily_visitor WHERE visit_date = CURRENT_DATE", Long.class);
+        return count == null ? 0L : count;
+    }
+
+    public long getTotalVisitorCount() {
+        Long count = jdbcTemplate.queryForObject(
+                "SELECT total_visitors FROM visitor_statistics WHERE id = 1", Long.class);
         return count == null ? 0L : count;
     }
 
