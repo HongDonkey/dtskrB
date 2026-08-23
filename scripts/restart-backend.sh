@@ -37,7 +37,6 @@ command -v curl >/dev/null 2>&1 || {
 }
 
 echo "Restarting ${SERVICE_NAME}..."
-sudo -v
 sudo systemctl restart "${SERVICE_NAME}"
 
 sudo systemctl is-active --quiet "${SERVICE_NAME}" || fail "The service did not enter the active state."
