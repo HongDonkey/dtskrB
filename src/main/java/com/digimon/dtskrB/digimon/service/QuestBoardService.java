@@ -2,7 +2,6 @@ package com.digimon.dtskrB.digimon.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -10,11 +9,10 @@ import org.springframework.stereotype.Service;
 import com.digimon.dtskrB.digimon.dto.QuestDetailDto;
 import com.digimon.dtskrB.digimon.dto.QuestImageDto;
 import com.digimon.dtskrB.digimon.dto.QuestSummaryDto;
+import com.digimon.dtskrB.digimon.repository.CatalogLanguage;
 
 @Service
 public class QuestBoardService {
-
-    private static final Set<String> LANGUAGES = Set.of("ko", "en", "jp");
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,8 +20,8 @@ public class QuestBoardService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<QuestSummaryDto> findPublishedQuests(String requestedLanguage) {
-        String language = normalizeLanguage(requestedLanguage);
+    public List<QuestSummaryDto> findPublishedQuests(CatalogLanguage catalogLanguage) {
+        String language = catalogLanguage.languageCode();
         return jdbcTemplate.query("""
                 SELECT q.id, q.category,
                        COALESCE(t.title, ko.title) AS title,
@@ -46,8 +44,8 @@ public class QuestBoardService {
                         resultSet.getTimestamp("updated_at").toLocalDateTime()), language);
     }
 
-    public Optional<QuestDetailDto> findPublishedQuest(long questId, String requestedLanguage) {
-        String language = normalizeLanguage(requestedLanguage);
+    public Optional<QuestDetailDto> findPublishedQuest(long questId, CatalogLanguage catalogLanguage) {
+        String language = catalogLanguage.languageCode();
         List<QuestDetailRow> quests = jdbcTemplate.query("""
                 SELECT q.id, q.category,
                        COALESCE(t.title, ko.title) AS title,
@@ -87,10 +85,6 @@ public class QuestBoardService {
                         resultSet.getString("image_url"),
                         resultSet.getString("location_name"),
                         resultSet.getString("location_note")), language, questId);
-    }
-
-    private String normalizeLanguage(String language) {
-        return LANGUAGES.contains(language) ? language : "ko";
     }
 
     private record QuestDetailRow(

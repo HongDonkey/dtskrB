@@ -6,11 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digimon.dtskrB.digimon.dto.QuestDetailDto;
 import com.digimon.dtskrB.digimon.dto.QuestSummaryDto;
+import com.digimon.dtskrB.digimon.repository.CatalogLanguage;
 import com.digimon.dtskrB.digimon.service.QuestBoardService;
 
 @RestController
@@ -24,15 +25,16 @@ public class QuestBoardController {
     }
 
     @GetMapping
-    public List<QuestSummaryDto> getQuests(@RequestParam(defaultValue = "ko") String lang) {
-        return questBoardService.findPublishedQuests(lang);
+    public List<QuestSummaryDto> getQuests(
+            @RequestHeader(name = "Accept-Language", defaultValue = "ko") String language) {
+        return questBoardService.findPublishedQuests(CatalogLanguage.fromHeader(language));
     }
 
     @GetMapping("/{questId}")
     public ResponseEntity<QuestDetailDto> getQuest(
             @PathVariable long questId,
-            @RequestParam(defaultValue = "ko") String lang) {
-        return questBoardService.findPublishedQuest(questId, lang)
+            @RequestHeader(name = "Accept-Language", defaultValue = "ko") String language) {
+        return questBoardService.findPublishedQuest(questId, CatalogLanguage.fromHeader(language))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
