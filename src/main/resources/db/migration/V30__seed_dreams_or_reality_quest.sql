@@ -229,3 +229,56 @@ CROSS JOIN (
   UNION ALL SELECT 'jp'
 ) language
 WHERE image.quest_post_id = 3;
+
+INSERT INTO `quest_post` (`id`, `title`, `category`, `source_url`, `sort_order`) VALUES
+  (4, '깨끗한 물 찾기', 'SUB', 'https://raiderking.com/digimon-story-time-stranger-where-to-find-clean-seawater-marineangemon-sidequest/', 40);
+
+INSERT INTO `quest_translation`
+    (`quest_post_id`, `language_code`, `title`, `summary`, `content`, `source_url`) VALUES
+  (4, 'ko', '깨끗한 물 찾기', '마린엔젤몬에게 가져다줄 깨끗한 바닷물의 정확한 채집 위치를 확인할 수 있습니다.', '어비스 해변의 대부분 채집 지점에서는 이상한 바닷물을 얻게 됩니다. 지도의 왼쪽 위, 낮은 지대에 있는 커다란 황금색 기어 위에서 깨끗한 바닷물을 채집하세요.', NULL),
+  (4, 'en', 'Finding Clean Water', 'Find the correct place to gather clean seawater for MarineAngemon.', 'Most gathering points at Abyss Beach give Funky Seawater. Go to the upper-left of the map and collect water from the large golden gear on the lower ledge.', 'https://raiderking.com/digimon-story-time-stranger-where-to-find-clean-seawater-marineangemon-sidequest/'),
+  (4, 'jp', 'きれいな水探し', 'マリンエンジェモンに渡すきれいな海水の正しい採取場所を確認できます。', 'アビス海岸のほとんどの採取地点では変な海水を入手します。マップ左上の低い場所にある大きな金色の歯車で、きれいな海水を採取してください。', NULL);
+
+INSERT INTO `quest_image` (`quest_post_id`, `image_url`, `sort_order`) VALUES
+  (4, '/digimon/captures/quest/cleanWater/1.jpg', 1),
+  (4, '/digimon/captures/quest/cleanWater/2.jpg', 2);
+
+INSERT INTO `quest_image_translation`
+    (`quest_image_id`, `quest_post_id`, `language_code`, `location_name`, `location_note`, `image_url`)
+SELECT image.id, image.quest_post_id, language.language_code,
+       CASE language.language_code
+         WHEN 'ko' THEN CASE image.sort_order
+           WHEN 1 THEN '마린엔젤몬 퀘스트 수주 위치'
+           WHEN 2 THEN '어비스 해변(현대)'
+         END
+         WHEN 'en' THEN CASE image.sort_order
+           WHEN 1 THEN 'Warrior''s Watering Hole'
+           WHEN 2 THEN 'Abyss Surface (Present Day)'
+         END
+         WHEN 'jp' THEN CASE image.sort_order
+           WHEN 1 THEN '戦士の水飲み場'
+           WHEN 2 THEN 'アビス地上（現代）'
+         END
+       END,
+       CASE language.language_code
+         WHEN 'ko' THEN CASE image.sort_order
+           WHEN 1 THEN '메인 스토리 「저승의 왕좌」 진행 중 마린엔젤몬에게 말을 겁니다.'
+           WHEN 2 THEN '지도 왼쪽 위의 낮은 지대로 내려가 커다란 황금색 기어에서 물을 채집합니다.'
+         END
+         WHEN 'en' THEN CASE image.sort_order
+           WHEN 1 THEN 'Talk to MarineAngemon during the main story quest “Throne of the Underworld.”'
+           WHEN 2 THEN 'Descend to the lower ledge in the upper-left of the map and gather water from the large golden gear.'
+         END
+         WHEN 'jp' THEN CASE image.sort_order
+           WHEN 1 THEN 'メインストーリー「冥界の玉座」の進行中にマリンエンジェモンに話しかけます。'
+           WHEN 2 THEN 'マップ左上の低い足場へ降り、大きな金色の歯車から水を採取します。'
+         END
+       END,
+       NULL
+FROM `quest_image` image
+CROSS JOIN (
+  SELECT 'ko' AS language_code
+  UNION ALL SELECT 'en'
+  UNION ALL SELECT 'jp'
+) language
+WHERE image.quest_post_id = 4;
