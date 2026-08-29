@@ -31,6 +31,9 @@ public class SeoController {
         List<Integer> digimonIds = jdbcTemplate.queryForList(
                 "SELECT id FROM digimon_kr ORDER BY id",
                 Integer.class);
+        List<Long> questIds = jdbcTemplate.queryForList(
+                "SELECT id FROM quest_post WHERE is_published = 1 ORDER BY sort_order, id",
+                Long.class);
 
         StringBuilder xml = new StringBuilder("""
                 <?xml version="1.0" encoding="UTF-8"?>
@@ -38,7 +41,9 @@ public class SeoController {
                         xmlns:xhtml="http://www.w3.org/1999/xhtml">
                 """);
         appendLocalizedUrls(xml, "/");
+        appendLocalizedUrls(xml, "/quests");
         digimonIds.forEach(id -> appendLocalizedUrls(xml, "/digimons/" + id));
+        questIds.forEach(id -> appendLocalizedUrls(xml, "/quests/" + id));
         xml.append("</urlset>\n");
 
         return ResponseEntity.ok()
