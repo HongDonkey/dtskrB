@@ -51,6 +51,7 @@ public class QuestBoardService {
                        COALESCE(t.title, ko.title) AS title,
                        COALESCE(t.summary, ko.summary) AS summary,
                        COALESCE(t.content, ko.content) AS content,
+                       t.source_url,
                        q.updated_at
                 FROM quest_post q
                 JOIN quest_translation ko ON ko.quest_post_id = q.id AND ko.language_code = 'ko'
@@ -62,15 +63,16 @@ public class QuestBoardService {
                         resultSet.getString("title"),
                         resultSet.getString("summary"),
                         resultSet.getString("content"),
+                        resultSet.getString("source_url"),
                         resultSet.getTimestamp("updated_at").toLocalDateTime()), language, questId);
         return quests.stream().findFirst().map(quest -> new QuestDetailDto(
-                quest.id(), quest.category(), quest.title(), quest.summary(), quest.content(),
+                quest.id(), quest.category(), quest.title(), quest.summary(), quest.content(), quest.sourceUrl(),
                 findImages(quest.id(), language), quest.updatedAt()));
     }
 
     private List<QuestImageDto> findImages(long questId, String language) {
         return jdbcTemplate.query("""
-                SELECT i.sort_order, i.image_url,
+                SELECT i.sort_order, COALESCE(t.image_url, i.image_url) AS image_url,
                        COALESCE(t.location_name, ko.location_name) AS location_name,
                        COALESCE(t.location_note, ko.location_note) AS location_note
                 FROM quest_image i
@@ -93,6 +95,7 @@ public class QuestBoardService {
             String title,
             String summary,
             String content,
+            String sourceUrl,
             java.time.LocalDateTime updatedAt) {
     }
 }

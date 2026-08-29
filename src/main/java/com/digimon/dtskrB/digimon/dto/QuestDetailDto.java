@@ -9,6 +9,7 @@ public record QuestDetailDto(
         String title,
         String summary,
         String content,
+        String sourceUrl,
         List<QuestImageDto> images,
         LocalDateTime updatedAt) {
 }
