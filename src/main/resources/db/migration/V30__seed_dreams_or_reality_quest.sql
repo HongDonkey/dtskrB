@@ -99,3 +99,133 @@ CROSS JOIN (
   UNION ALL SELECT 'jp'
 ) language
 WHERE image.quest_post_id = 2;
+
+INSERT INTO `quest_post` (`id`, `title`, `category`, `source_url`, `sort_order`) VALUES
+  (3, '조용한 뒤틀림', 'SUB', 'https://gall.dcinside.com/mgallery/board/view/?id=digimontime&no=3256&search_head=10&page=3', 30);
+
+INSERT INTO `quest_translation`
+    (`quest_post_id`, `language_code`, `title`, `summary`, `content`, `source_url`) VALUES
+  (3, 'ko', '조용한 뒤틀림', '현대 신주쿠와 아키하바라에 나타난 쿠라몬 13마리의 위치를 확인할 수 있습니다.', '각 이미지의 지역명과 지도에 표시된 위치를 따라 쿠라몬을 쓰러뜨리고 코어 파편을 모두 모으세요.', NULL),
+  (3, 'en', 'Quiet Distortion', 'Find the 13 Kuramon appearing across present-day Shinjuku and Akihabara.', 'Follow each area name and map marker to defeat every Kuramon and collect all of the core fragments.', NULL),
+  (3, 'jp', '静かな歪み', '現代の新宿と秋葉原に現れたクラモン13体の場所を確認できます。', '各画像のエリア名とマップ上の位置をたどり、クラモンを倒してコアの欠片をすべて集めてください。', NULL);
+
+INSERT INTO `quest_image` (`quest_post_id`, `image_url`, `sort_order`) VALUES
+  (3, '/digimon/captures/quest/quietDistortion/1.jpg', 1),
+  (3, '/digimon/captures/quest/quietDistortion/2.jpg', 2),
+  (3, '/digimon/captures/quest/quietDistortion/3.jpg', 3),
+  (3, '/digimon/captures/quest/quietDistortion/4.jpg', 4),
+  (3, '/digimon/captures/quest/quietDistortion/5.jpg', 5),
+  (3, '/digimon/captures/quest/quietDistortion/6.jpg', 6),
+  (3, '/digimon/captures/quest/quietDistortion/7.jpg', 7),
+  (3, '/digimon/captures/quest/quietDistortion/8.jpg', 8),
+  (3, '/digimon/captures/quest/quietDistortion/9.jpg', 9),
+  (3, '/digimon/captures/quest/quietDistortion/10.jpg', 10),
+  (3, '/digimon/captures/quest/quietDistortion/11.jpg', 11),
+  (3, '/digimon/captures/quest/quietDistortion/12.jpg', 12),
+  (3, '/digimon/captures/quest/quietDistortion/13.jpg', 13);
+
+INSERT INTO `quest_image_translation`
+    (`quest_image_id`, `quest_post_id`, `language_code`, `location_name`, `location_note`, `image_url`)
+SELECT image.id, image.quest_post_id, language.language_code,
+       CASE language.language_code
+         WHEN 'ko' THEN CASE image.sort_order
+           WHEN 1 THEN '니시신주쿠 철도교 교차점'
+           WHEN 2 THEN '신주쿠 가부키초 극장 광장'
+           WHEN 3 THEN '신주쿠 동쪽 상점가'
+           WHEN 4 THEN '신주쿠 어느 뒷골목'
+           WHEN 5 THEN '신주쿠역 동쪽 개찰구'
+           WHEN 6 THEN '신주쿠 지하 산책로'
+           WHEN 7 THEN '신주쿠 지하상가 서브로드'
+           WHEN 8 THEN '아키하바라 어느 뒷골목'
+           WHEN 9 THEN '아키하바라역 전자거리 남쪽 출구'
+           WHEN 10 THEN '토에이마루노나카선 신주쿠역'
+           WHEN 11 THEN '희망의 벽'
+           WHEN 12 THEN '히가시신주쿠 비전 광장'
+           WHEN 13 THEN '히가시신주쿠 타카스 가도 교차점'
+         END
+         WHEN 'en' THEN CASE image.sort_order
+           WHEN 1 THEN 'Nishi-Shinjuku Railway Bridge Intersection'
+           WHEN 2 THEN 'Shinjuku Kabukicho Theater Square'
+           WHEN 3 THEN 'Shinjuku East Shopping District'
+           WHEN 4 THEN 'A Back Alley in Shinjuku'
+           WHEN 5 THEN 'Shinjuku Station East Exit Ticket Gate'
+           WHEN 6 THEN 'Shinjuku Underground Walkway'
+           WHEN 7 THEN 'Shinjuku Underground Mall Subroad'
+           WHEN 8 THEN 'A Back Alley in Akihabara'
+           WHEN 9 THEN 'Akihabara Station Electric Town South Exit'
+           WHEN 10 THEN 'Toei Marunouchi Line Shinjuku Station'
+           WHEN 11 THEN 'Wall of Hope'
+           WHEN 12 THEN 'Higashi-Shinjuku Vision Square'
+           WHEN 13 THEN 'Higashi-Shinjuku Takasu Avenue Intersection'
+         END
+         WHEN 'jp' THEN CASE image.sort_order
+           WHEN 1 THEN '西新宿鉄道橋交差点'
+           WHEN 2 THEN '新宿歌舞伎町劇場広場'
+           WHEN 3 THEN '新宿東口商店街'
+           WHEN 4 THEN '新宿のとある裏路地'
+           WHEN 5 THEN '新宿駅東口改札'
+           WHEN 6 THEN '新宿地下歩道'
+           WHEN 7 THEN '新宿地下街サブロード'
+           WHEN 8 THEN '秋葉原のとある裏路地'
+           WHEN 9 THEN '秋葉原駅電気街南口'
+           WHEN 10 THEN '都営丸ノ内線新宿駅'
+           WHEN 11 THEN '希望の壁'
+           WHEN 12 THEN '東新宿ビジョン広場'
+           WHEN 13 THEN '東新宿タカス街道交差点'
+         END
+       END,
+       CASE language.language_code
+         WHEN 'ko' THEN CASE image.sort_order
+           WHEN 1 THEN '철도교 교차점 안쪽 통로'
+           WHEN 2 THEN '극장 광장 중앙'
+           WHEN 3 THEN '동쪽 상점가 교차로'
+           WHEN 4 THEN '뒷골목 안쪽 공터'
+           WHEN 5 THEN '동쪽 개찰구 앞'
+           WHEN 6 THEN '10~14번 출구 방향 통로'
+           WHEN 7 THEN '서브로드 중앙 통로'
+           WHEN 8 THEN '뒷골목 입구 왼쪽'
+           WHEN 9 THEN '전자거리 남쪽 출구 광장'
+           WHEN 10 THEN '신주쿠역 개찰구 통로'
+           WHEN 11 THEN '희망의 벽 중앙'
+           WHEN 12 THEN '비전 광장 화단 옆'
+           WHEN 13 THEN '타카스 가도 교차점 인도'
+         END
+         WHEN 'en' THEN CASE image.sort_order
+           WHEN 1 THEN 'Inside the railway bridge intersection passage'
+           WHEN 2 THEN 'In the middle of the theater square'
+           WHEN 3 THEN 'At the east shopping district intersection'
+           WHEN 4 THEN 'In the open area at the back of the alley'
+           WHEN 5 THEN 'In front of the east ticket gate'
+           WHEN 6 THEN 'Along the passage toward exits 10–14'
+           WHEN 7 THEN 'In the center passage of Subroad'
+           WHEN 8 THEN 'To the left of the alley entrance'
+           WHEN 9 THEN 'In the plaza outside the Electric Town South Exit'
+           WHEN 10 THEN 'Along the Shinjuku Station ticket gate passage'
+           WHEN 11 THEN 'In the center of the Wall of Hope'
+           WHEN 12 THEN 'Beside the planter in Vision Square'
+           WHEN 13 THEN 'On the sidewalk at the Takasu Avenue intersection'
+         END
+         WHEN 'jp' THEN CASE image.sort_order
+           WHEN 1 THEN '鉄道橋交差点の内側通路'
+           WHEN 2 THEN '劇場広場の中央'
+           WHEN 3 THEN '東口商店街の交差点'
+           WHEN 4 THEN '裏路地の奥にある空き地'
+           WHEN 5 THEN '東口改札の前'
+           WHEN 6 THEN '10～14番出口方面の通路'
+           WHEN 7 THEN 'サブロード中央通路'
+           WHEN 8 THEN '裏路地入口の左側'
+           WHEN 9 THEN '電気街南口前の広場'
+           WHEN 10 THEN '新宿駅改札通路'
+           WHEN 11 THEN '希望の壁の中央'
+           WHEN 12 THEN 'ビジョン広場の植え込み横'
+           WHEN 13 THEN 'タカス街道交差点の歩道'
+         END
+       END,
+       NULL
+FROM `quest_image` image
+CROSS JOIN (
+  SELECT 'ko' AS language_code
+  UNION ALL SELECT 'en'
+  UNION ALL SELECT 'jp'
+) language
+WHERE image.quest_post_id = 3;
