@@ -43,4 +43,5 @@ public enum CatalogLanguage {
     public String specialSkillTable() { return specialSkillTable; }
     public String attachmentSkillTable() { return attachmentSkillTable; }
     public String allLabel() { return allLabel; }
+    public String languageCode() { return name().toLowerCase(); }
 }
